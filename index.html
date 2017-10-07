@@ -1,13 +1,1947 @@
-<!DOCTYPE html>
-<html>
-<body>
+-<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Oudlicht </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap-3.3.6.css">
+    <script src="js/lodash.js"></script>
+    <script src="js/jquery-1.12.0.min.js"></script>
+    <script src="js/bootstrap-3.3.6.min.js"></script>
+    <script src="js/plotly-latest.min.js"></script>
+    <style>
+        /*
+              blauw-1: rgb(207,35,45)
+              blauw-2: rgb(189,220,232)
+              blauw-3: rgb(227,240,245)
+              grijs: rgb(51,51,51)
 
-<h1>This is heading 1</h1>
-<h2>This is heading 2</h2>
-<h3>This is heading 3</h3>
-<h4>This is heading 4</h4>
-<h5>This is heading 5</h5>
-<h6>This is heading 6</h6>
+              cb-groen: background-color: rgb(207,35,45);
+              cb-paars: background-color: rgba(57, 0, 82, 1);
+        */
+        @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(MaterialIcons-Regular.eot); /* For IE6-8 */
+            src: local('Material Icons'), local('MaterialIcons-Regular'), url("fonts/MaterialIcons-Regular.woff2") format('woff2'), url("fonts/MaterialIcons-Regular.ttf") format('truetype');
+        }
 
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px; /* Preferred icon size */
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+        }
+
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat-Regular'), url('fonts/Montserrat.woff2') format('woff2'), url('fonts/Montserrat.ttf') format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+        }
+        /* latin-ext */
+        @font-face {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Lato Regular'), local('Lato-Regular'), url('fonts/Lato-ext.woff2') format('woff2'), url('fonts/Lato-ext.ttf') format('truetype');
+            unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Lato Regular'), local('Lato-Regular'), url('fonts/Lato.woff2') format('woff2'), url('fonts/Lato.ttf') format('truetype');
+            ;
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+        }
+
+        body {
+            min-width: 768px;
+            _width: expression( document.body.clientWidth > 1000 ? "1000px" : "auto" );
+            font: 400 15px Lato, sans-serif;
+            line-height: 1.8;
+            color: #818181;
+        }
+
+        h2 {
+            font-size: 24px;
+            text-transform: uppercase;
+            color: rgb(51, 51, 51);
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        h4 {
+            font-size: 19px;
+            line-height: 1.375em;
+            color: #303030;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        .jumbotron {
+            background-color: #fff;
+            color: rgb(51, 51, 51);
+            padding-top: 100px;
+            margin-bottom: 0px;
+            font-family: Montserrat, sans-serif;
+        }
+
+        .container-fluid {
+            padding: 10px 10px;
+        }
+
+        .bg-grey {
+            background-color: #f6f6f6;
+        }
+
+        .logo-small {
+            color: rgb(51, 51, 51);
+            font-size: 50px;
+        }
+
+        .logo {
+            color: rgb(100,169,250);
+            font-size: 200px;
+        }
+
+        .thumbnail {
+            padding: 0 0 15px 0;
+            border: none;
+            border-radius: 0;
+        }
+
+            .thumbnail img {
+                width: 100%;
+                height: 100%;
+                margin-bottom: 10px;
+            }
+
+        .carousel-control.right, .carousel-control.left {
+            background-image: none;
+            color: rgb(100,169,250);
+        }
+
+        .carousel-indicators li {
+            border-color: rgb(207, 35, 45);
+        }
+
+            .carousel-indicators li.active {
+                background-color: rgb(189,220,232);
+            }
+
+        .item h4 {
+            font-size: 19px;
+            line-height: 1.375em;
+            font-weight: 400;
+            font-style: italic;
+            margin: 70px 0;
+        }
+
+        .item span {
+            font-style: normal;
+        }
+
+        a.list-group-item:hover {
+            background-color: rgb(227, 240, 245);
+            color: rgb(51, 51, 51);
+        }
+
+        .list-group-item.active:hover {
+            background-color: rgb(189, 220, 232);
+            color: rgb(51, 51, 51);
+        }
+
+        .list-group-item.active,
+        .list-group-item.active:focus {
+            background-color: rgb(189, 220, 232);
+            /*background-color: rgb(189, 220, 232);*/
+            border-color: rgb(51, 51, 51);
+            color: rgb(51, 51, 51);
+        }
+
+        .list-group-item-info {
+            background-color: rgb(207, 35, 45);
+            color: rgb(255, 255, 255);
+            font-weight: 800;
+        }
+
+        .classWithPad {
+            margin: 1px 1px 1px 1px;
+            padding: 1px 1px 1px 1px;
+        }
+
+        .half-row {
+            height: 50%;
+        }
+
+        .panel {
+            border: 1px solid rgb(100,169,250);
+            /*rgb(207,35,45); was voor STAP*/
+            border-radius: 0 !important;
+            transition: box-shadow 0.5s;
+        }
+
+            .panel:hover {
+                box-shadow: 5px 0px 40px rgba(0,0,0, .2);
+            }
+
+        .panel-footer .btn:hover {
+            border: 1px solid rgb(100,169,250);
+            background-color: #fff !important;
+            color: rgb(100,169,250);
+        }
+
+        .panel-heading {
+            color: #fff !important;
+            background-color: rgb(101, 186, 235) !important;
+            /*background-color: rgb(207,35,45) !important;*/
+            border-bottom: 1px solid transparent;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+
+        .panel-footer {
+            background-color: white !important;
+        }
+
+            .panel-footer h3 {
+                font-size: 32px;
+            }
+
+            .panel-footer h4 {
+                color: #aaa;
+                font-size: 14px;
+            }
+
+            .panel-footer .btn {
+                margin: 15px 0;
+                background-color: rgb(101, 186, 235);
+                color: #fff;
+            }
+
+        .navbar {
+            margin-bottom: 0;
+            background-color: #e2e1dd;
+            background-color: rgba(57, 0, 82, 1);
+            background-color: rgb(100,169,250);
+            z-index: 9999;
+            border: 0;
+            font-size: 12px !important;
+            line-height: 1.42857143 !important;
+            letter-spacing: 4px;
+            border-radius: 0;
+            font-family: Montserrat, sans-serif;
+        }
+
+            .navbar li a, .navbar .navbar-brand {
+                color: #fff !important;
+            }
+
+        .navbar-nav li a:hover, .navbar-nav li.active a {
+            color: rgb(100,169,250) !important;
+            background-color: #fff !important;
+        }
+
+        .navbar-default .navbar-toggle {
+            border-color: transparent;
+            color: #fff !important;
+        }
+
+            .navbar-default .navbar-toggle .icon-bar {
+                border-color: transparent;
+                background-color: #fff !important;
+            }
+
+            .navbar-default .navbar-toggle:focus,
+            .navbar-default .navbar-toggle:hover {
+                border-color: transparent;
+                background-color: rgb(57, 0, 82) !important;
+            }
+
+        /* navbar from https://bootsnipp.com/snippets/5lapE */
+        .navbar-fixed-left {
+            width: 155px;
+            position: fixed;
+            border-radius: 0;
+            height: 100%;
+        }
+
+            .navbar-fixed-left .navbar-nav > li {
+                float: none; /* Cancel default li float: left */
+                width: 139px;
+            }
+
+            .navbar-fixed-left + .container {
+                padding-left: 160px;
+            }
+            /* einde navbar links */
+            /* On using dropdown menu (To right shift popuped) */
+            .navbar-fixed-left .navbar-nav > li > .dropdown-menu {
+                margin-top: -50px;
+                margin-left: 140px;
+                background-color: rgb(100,169,250);
+                ;
+            }
+
+        .text-left > p {
+            text-align: left;
+        }
+
+        navbar-fixed-top .navbar-nav > li > .dropdown-menu {
+            margin-top: -50px;
+            margin-left: 140px;
+            background-color: rgb(100,169,250);
+            ;
+        }
+
+        footer .glyphicon {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: rgb(100,169,250);
+        }
+
+        .slideanim {
+            visibility: hidden;
+        }
+
+        .slide {
+            animation-name: slide;
+            -webkit-animation-name: slide;
+            animation-duration: 1s;
+            -webkit-animation-duration: 1s;
+            visibility: visible;
+        }
+
+        @keyframes slide {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateY(70%);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: translateY(0%);
+            }
+        }
+
+        @-webkit-keyframes slide {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateY(70%);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: translateY(0%);
+            }
+        }
+
+        @media screen and (max-width: 1199px) {
+            .jumbotron {
+                padding-top: 150px;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .jumbotron {
+                padding-top: 20px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .col-sm-4 {
+                text-align: center;
+                margin: 2px 0;
+            }
+
+            .btn-lg {
+                width: 100%;
+                margin-bottom: 35px;
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            .jumbotron {
+                padding-top: 100px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .logo {
+                font-size: 150px;
+            }
+        }
+
+        @media screen and (max-width: 479px) {
+            .jumbotron {
+                padding-top: 150px;
+            }
+        }
+
+        .highlight-edit {
+            color: rgba(255, 0, 0, 0.75);
+        }
+
+            .highlight-edit:after {
+                content: "]";
+            }
+
+            .highlight-edit:before {
+                content: "[";
+            }
+
+        .vcenter {
+            display: inline-block;
+            vertical-align: middle;
+            float: none;
+        }
+
+        thead tr {
+            background-color: rgb(227, 240, 245);
+        }
+
+            thead tr th {
+                color: rgb(51, 51, 51);
+                text-align: center;
+            }
+
+        tr td:first-child {
+            font-weight: 800;
+            text-align: left;
+            color: rgb(51, 51, 51);
+        }
+
+        tr td {
+            color: rgb(51, 51, 51);
+        }
+    </style>
+</head>
+<body id="OudlichtWebsite'" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+    <script>
+        console.log($(window).width());
+
+        var printNum = function (num, dec) {
+            return (dec != undefined) ? num.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        };
+
+        var colorPalette = function (i) {
+            var colors = [
+            "rgb(169, 172, 178)",
+            "rgb(88, 149, 243)",
+            "rgb(106, 163, 241)",
+            "rgb(101, 186, 235)",
+            "rgb(184, 187, 194)"
+            ];
+            return colors[i % colors.length];
+        };
+    </script>
+
+    <nav class="navbar navbar-inverse navbar-fixed-left">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Roeiers<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Werner</a></li>
+                        <li><a href="#">Pieter</a></li>
+                        <li><a href="#">Sub Menu3</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Sub Menu4</a></li>
+                        <li><a href="#">Sub Menu5</a></li>
+                    </ul>
+                </li>
+                <li><a href="#Coachteam">Coachteam</a></li>
+                <li><a href="#Wedstrijden">Wedstrijden</a></li>
+                <li><a href="#Activiteiten">Activiteiten</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Oudlicht</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#historie.html">Historie<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#historie2017">2016-2017</a></li>
+                            <li><a href="#historie2016">2015-2016</a></li>
+                            <li><a href="#historie2015">2014-2015</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Sign Out</a></li>
+                    <!--<li><a href="#deelnemers">OVERGANGEN</a></li>-->
+                    <!--<li><a href="#kosten">UITKERINGEN</a></li>-->
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="main" class="jumbotron text-center">
+
+        <img src="img/Duisburg.jpg" style="height: 200px; margin-bottom: 20px">
+        <p>Oudlicht website tekstvak 1 <i>intro</i></p>
+    </div>
+
+    <script>
+        //$(function () {
+
+        //    $.getJSON("data/aanbieders/aanbiedersM.json", function (data) {
+        //        pensioenRegelingen.data = data;
+
+        //        var htmlStr = { "DB": "", "DC": "" };
+
+        //        Object.keys(htmlStr).forEach(function (typeReg) {
+        //            htmlStr[typeReg] += "<thead><tr><th></th>";
+        //            for (key in data) {
+        //                htmlStr[typeReg] += "<th style='height: 30px'><div data-toggle='tooltip' data-placement='center' title='" + key + "'> " + data[key].short2 + "</div></th>";
+        //            }
+        //            htmlStr[typeReg] += "</tr></thead><tbody>";
+        //            for (kkey in pensioenRegelingen.filter[typeReg]) {
+        //                htmlStr[typeReg] += "<tr><td>" + kkey + "</td>";
+        //                for (key in data) {
+        //                    htmlStr[typeReg] += "<td>";
+        //                    if (typeof data[key]["regeling"][typeReg][kkey] == typeof true) {
+        //                        htmlStr[typeReg] += "<span class='glyphicon " + (data[key]["regeling"][typeReg][kkey] ? "glyphicon-ok" : "glyphicon-remove") + "'></span>";
+        //                    } else if (typeof data[key]["regeling"][typeReg][kkey] == typeof [1, 2]) {
+        //                        htmlStr[typeReg] += "[";
+        //                        for (var i = 0; i < data[key]["regeling"][typeReg][kkey].length; i++) {
+        //                            htmlStr[typeReg] += data[key]["regeling"][typeReg][kkey][i] + " - ";
+        //                        }
+        //                        htmlStr[typeReg] = htmlStr[typeReg].substr(0, htmlStr[typeReg].length - 3) + "]";
+        //                    } else {
+        //                        htmlStr[typeReg] += data[key]["regeling"][typeReg][kkey];
+        //                    }
+        //                    htmlStr[typeReg] += "</td>";
+        //                }
+        //                htmlStr[typeReg] += "</tr>";
+        //            }
+        //            htmlStr[typeReg] += "</tbody>";
+        //        });
+
+        //        $("#regeling-db").append(htmlStr.DB);
+        //        $("#regeling-db").find("[data-toggle='tooltip']").tooltip();
+
+        //        $("#regeling-dc").append(htmlStr.DC);
+        //        $("#regeling-dc").find("[data-toggle='tooltip']").tooltip();
+
+        //        htmlStr = "";
+        //        _(data).forEach(function (val, key) {
+        //            htmlStr += "<li><a href='#' onClick='return false;' data-key='" + val.short + "'>&nbsp;&nbsp;" + key + "</a></li>";
+        //        });
+        //        _([1, 2, 3]).forEach(function (val) {
+        //            $("#voorbeeld-" + val + "-aanbieder-list").html(htmlStr);
+        //        });
+
+        //    });
+        //});
+    </script>
+
+    <div class="row">
+
+        <div id="Totaal" class="container-fluid text-center">
+            <h2>Totaal <i>Werkgever</i></h2>
+            <div class="col-sm-1 vcenter"></div>
+            <div class="col-sm-2 vcenter">
+                <div class="panel-heading">Totalen</div>
+                <table class="table" align="right">
+                    <tr>
+                        <th>Totaal</th>
+                        <th>€ 220.000</th>
+                    </tr>
+                    <tr>
+                        <td>Verzuim</td>
+                        <td>€60.000</td>
+                    </tr>
+                    <tr>
+                        <td>Ziektewet</td>
+                        <td>€75.000</td>
+                    </tr>
+                    <tr>
+                        <td>WGA</td>
+                        <td>€85.000</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-5 vcenter">
+                <div id="Totalen_werkgever_pie"><!-- Plotly chart will be drawn inside this DIV --></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+                var data = [{
+                    values: [85000, 75000, 60000],
+                    labels: ['Verzuim', 'Ziektewet', 'WGA'],
+                    type: 'pie',
+                }];
+
+                var layout = {
+                    height: 400,
+                    width: 500,
+                    marker: {
+                        color: ['rgb(200,0,0)', 'rgb(0,100,0)', 'rgb(0,0,100)']
+                    }
+                };
+                Plotly.newPlot('Totalen_werkgever_pie', data, layout);
+    </script>
+
+    <div id="Verzuim" class="container-fluid text-center">
+
+        <br />
+        <h2>Verzuim </h2>
+        <a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20Verzuim.html"><i>(Toelichting)</i></a>
+        <br />
+    </div>
+
+    <div id="ZW" class="container-fluid text-center">
+
+        <br />
+        <h2>Ziektewet</h2>
+        <a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20ZW.html"><i>(Toelichting)</i></a>
+        <br />
+    </div>
+
+    <!--- dit was het eerste-->
+    <!--<ol class="carousel-indicators"></ol>
+    <div class="carousel-inner" role="listbox"></div><br><br>-->
+
+    <div class='row'>
+        <div id="ZW" class="container-fluid text-center">
+            <div class="col-sm-1 vcenter"></div>
+            <div class="col-sm-2 vcenter">
+
+                <!-- Default panel contents -->
+                <div class="panel-heading">ZW-instroom in aantallen</div>
+
+                <table class="table">
+                    <tr>
+                        <th>Jaar</th>
+                        <th>Aantal</th>
+                    </tr>
+                    <tr>
+                        <td>2012</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2013</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2014</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2015</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2016</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2017</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>2018</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>2019</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>2020</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>2021</td>
+                        <td>0.8</td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="col-sm-3 vcenter">
+                <div class="panel-heading">ZW Schade</div>
+                <div id="lineZWSchade"></div>
+            </div>
+            <div class="col-sm-3 vcenter">
+                <div class="panel-heading">ZW Premie</div>
+                <div id="lineZWPremie"></div>
+            </div>
+            <div class="col-sm-2 vcenter">
+                <div class="panel-heading">Premie 2017-2019 ZW</div>
+                <div id="BarZW"></div>
+            </div>
+        </div>
+    </div>
+
+    <p align="center">
+        In dit scenario is gerekend met een instroom gelijk aan de sector (0,83).
+    </p>
+
+    <div id="WGA" class="container-fluid text-center">
+
+        <br />
+        <br />
+        <h2>WGA</h2>
+        <a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20WGA.html"><i>(Toelichting)</i></a>
+    </div>
+
+    <!--- dit was het eerste-->
+    <!--<ol class="carousel-indicators"></ol>
+    <div class="carousel-inner" role="listbox"></div><br><br>-->
+
+    <div class='row'>
+        <div id="WGA" class="container-fluid text-center">
+            <div class="col-sm-1 vcenter"></div>
+            <div class="col-sm-2 vcenter">
+
+                <!-- Default panel contents -->
+                <div class="panel-heading">WGA-instroom in aantallen</div>
+
+                <table class="table" style='font-size:60%;'>
+                    <tr>
+                        <td>2012</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2013</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2014</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2015</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2016</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2017</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2018</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>2019</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2020</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2021</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2022</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2023</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2024</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2025</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="col-sm-3 vcenter">
+                <div class="panel-heading">WGA Schade</div>
+                <div id="lineWGASchade"></div>
+            </div>
+            <div class="col-sm-3 vcenter">
+
+                <div class="panel-heading">WGA Premie</div>
+                <div id="lineWGAPremie"></div>
+            </div>
+            <div class="col-sm-2 vcenter">
+                <div class="panel-heading">Premie 2017-2019 WGA</div>
+                <div id="BarWGA"></div>
+            </div>
+        </div>
+    </div>
+
+    <p align="center">
+        In dit scenario is gerekend met 2 WGA-instromers in 2018 en vervolgens een instromer in 2021, 2024 en 2027. <br>
+        Met dit scenario willen wij laten zien als zowel de huidig langdurig zieke als de persoon in de Ziektewet na 2 jaar in de WGA terecht komt.
+    </p>
+
+
+    <script>
+            var lijnWGASchade1 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                type: 'scatter',
+                name: 'Historische uitkeringslast'
+            };
+            var lijnWGASchade2 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [0, 0, 0, 0, 0, 0, 30000, 20000, 35000, 25000, 50000, 45000, 65000, 70000],
+                type: 'scatter',
+                name: 'Toekomstige uitkeringslast'
+            };
+            lineWGASchade= document.getElementById('lineWGASchade');
+            Plotly.plot(lineWGASchade, [lijnWGASchade1, lijnWGASchade2], layout = { showlegend:true, legend:{"orientation": "h", y: 1.1, x: 0.0}, margin: { l: 50, r: 10, t: 1, b:20} });
+
+            var lijnWGAPremie1 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000],
+                type: 'scatter',
+                name: 'UWV',
+                line: { color: 'rgb(200,0,0)'}
+            };
+            var lijnWGAPremie2 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [0, 0, 0, 0, 0, 0, 30000, 20000, 35000, 25000, 50000, 45000, 65000, 70000],
+                type: 'scatter',
+                name: 'ERD',
+                line: { color: 'rgb(0,100,0)'}
+            };
+            var lijnWGAPremie3 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000],
+                type: 'scatter',
+                name: 'Aegon',
+                line: { color: 'rgb(0,0,100)'}
+            };
+            lineWGAPremie = document.getElementById('lineWGAPremie');
+            Plotly.plot(lineWGAPremie, [lijnWGAPremie1, lijnWGAPremie2, lijnWGAPremie3], layout = { showlegend:true, legend:{orientation: 'h', y: 1.1, x: 0.0}, margin: { l: 50, r: 10, t: 1, b:20} });
+
+            BarWGA1 = document.getElementById('BarWGA1');
+
+            Plotly.plot(BarWGA, [{
+                x: ['UWV', 'ERD', 'Aegon'],
+                y: [30000, 85000, 60000],
+                type: 'bar',
+                marker:{
+                color: ['rgb(200,0,0)', 'rgb(0,100,0)', 'rgb(0,0,100)']
+                }
+            }], {
+                margin: { l: 50, r: 10, t: 10, b:40}
+            });
+
+    </script>
+
+    <script>
+            lineZWSchade = document.getElementById('lineZWSchade');
+            var lijnZWSchade1 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018],
+                y: [0, 0, 0, 17485, 20951, 3324, 0],
+                type: 'scatter',
+                name: 'Historische schadelast ZW'},
+                showlegend = true;
+            var lijnZWSchade2 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018],
+                y: [0, 0, 0, 17485, 38436, 41760, 24275],
+                type: 'scatter',
+                name: 'Toekomstige schadelast ZW'},
+                showlegend = true;
+            Plotly.plot(lineZWSchade, [lijnZWSchade1, lijnZWSchade2], layout = { showlegend:true, legend:{"orientation": "h", y: 1.1, x: 0.0}, margin: { l: 50, r: 10, t: 1, b:20} });
+            var lijnZWPremie1= {
+                x: [2017, 2018, 2019, 2020, 2021],
+                y: [5000, 35000, 56000,30000,6000],
+                type: 'scatter',
+                name: 'Gedifferentieerde premie UWV',
+                line: { color: 'rgb(200,0,0)'}
+            };
+            var lijnZWPremie2 = {
+                x: [2017, 2018, 2019, 2020, 2021],
+                y: [25000, 25000, 25000, 25000, 25000],
+                type: 'scatter',
+                name: 'ERD + externe uitvoering',
+                line: { color: 'rgb(0,100,0)'}
+            };
+            var lijnZWPremie3 = {
+                x: [2017, 2018, 2019, 2020, 2021],
+                y: [10000, 10000, 10000, 10000, 10000],
+                type: 'scatter',
+                name: 'Aegon',
+                line: { color: 'rgb(0,0,100)'}
+            };
+            lineZWPremie= document.getElementById('lineZWPremie');
+            Plotly.plot(lineZWPremie, [lijnZWPremie1, lijnZWPremie2, lijnZWPremie3], layout = { showlegend:true, legend:{"orientation": "h", y: 1.1, x: 0.0}, margin: { l: 50, r: 10, t: 1, b:20} });
+
+            BarZW1 = document.getElementById('BarZW');
+
+            Plotly.plot(BarZW, [{
+                x: ['UWV', 'ERD', 'Aegon'],
+                y: [96000,75000,30000],
+                type: 'bar',
+                marker:{
+                color: ['rgb(200,0,0)', 'rgb(0,100,0)', 'rgb(0,0,100)']
+                }
+            }], {
+                margin: { l: 50, r: 10, t: 20, b:30}
+            });
+    </script>
+
+
+
+    <footer class="container-fluid text-center">
+        <a href="#main" title="Naar Begin">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </a>
+        <p>Werkgeversdashboard door <a href="http://www.aaa-riskfinance.nl" title="Out of the box risk-consultants">www.aaa-riskfinance.nl</a></p>
+    </footer>
+
+    <script>
+            $(function () {
+                // Add smooth scrolling to all links in navbar + footer link
+                $(".navbar a, footer a[href='#myPage']").on('click', function (event) {
+
+                    // Prevent default anchor click behavior
+                    event.preventDefault();
+
+                    // Store hash
+                    var hash = this.hash;
+
+                    // Using jQuery's animate() method to add smooth page scroll
+                    // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+                    $('html, body').animate({
+                        scrollTop: $(hash).offset().top
+                    }, 900, function () {
+
+                        // Add hash (#) to URL when done scrolling (default click behavior)
+                        window.location.hash = hash;
+                    });
+                });
+
+                $(window).scroll(function () {
+                    $(".slideanim").each(function () {
+                        var pos = $(this).offset().top;
+
+                        var winTop = $(window).scrollTop();
+                        if (pos < winTop + 600) {
+                            $(this).addClass("slide");
+                        }
+                    });
+                });
+            });
+    </script>
+</body>
+</html>-<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>WGA Werkgeversdashboard - WebDemo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/bootstrap-3.3.6.css">
+    <script src="js/lodash.js"></script>
+    <script src="js/jquery-1.12.0.min.js"></script>
+    <script src="js/bootstrap-3.3.6.min.js"></script>
+    <script src="js/plotly-latest.min.js"></script>
+    <style>
+        /*
+              blauw-1: rgb(207,35,45)
+              blauw-2: rgb(189,220,232)
+              blauw-3: rgb(227,240,245)
+              grijs: rgb(51,51,51)
+
+              cb-groen: background-color: rgb(207,35,45);
+              cb-paars: background-color: rgba(57, 0, 82, 1);
+        */
+        @font-face {
+            font-family: 'Material Icons';
+            font-style: normal;
+            font-weight: 400;
+            src: url(MaterialIcons-Regular.eot); /* For IE6-8 */
+            src: local('Material Icons'), local('MaterialIcons-Regular'), url("fonts/MaterialIcons-Regular.woff2") format('woff2'), url("fonts/MaterialIcons-Regular.ttf") format('truetype');
+        }
+
+        .material-icons {
+            font-family: 'Material Icons';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px; /* Preferred icon size */
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+            /* Support for all WebKit browsers. */
+            -webkit-font-smoothing: antialiased;
+            /* Support for Safari and Chrome. */
+            text-rendering: optimizeLegibility;
+            /* Support for Firefox. */
+            -moz-osx-font-smoothing: grayscale;
+            /* Support for IE. */
+            font-feature-settings: 'liga';
+        }
+
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Montserrat-Regular'), url('fonts/Montserrat.woff2') format('woff2'), url('fonts/Montserrat.ttf') format('truetype');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+        }
+        /* latin-ext */
+        @font-face {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Lato Regular'), local('Lato-Regular'), url('fonts/Lato-ext.woff2') format('woff2'), url('fonts/Lato-ext.ttf') format('truetype');
+            unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Lato';
+            font-style: normal;
+            font-weight: 400;
+            src: local('Lato Regular'), local('Lato-Regular'), url('fonts/Lato.woff2') format('woff2'), url('fonts/Lato.ttf') format('truetype');
+            ;
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215, U+E0FF, U+EFFD, U+F000;
+        }
+
+        body {
+            min-width: 768px;
+            _width: expression( document.body.clientWidth > 1000 ? "1000px" : "auto" );
+            font: 400 15px Lato, sans-serif;
+            line-height: 1.8;
+            color: #818181;
+        }
+
+        h2 {
+            font-size: 24px;
+            text-transform: uppercase;
+            color: rgb(51, 51, 51);
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        h4 {
+            font-size: 19px;
+            line-height: 1.375em;
+            color: #303030;
+            font-weight: 400;
+            margin-bottom: 30px;
+        }
+
+        .jumbotron {
+            background-color: #fff;
+            color: rgb(51, 51, 51);
+            padding-top: 100px;
+            margin-bottom: 0px;
+            font-family: Montserrat, sans-serif;
+        }
+
+        .container-fluid {
+            padding: 10px 10px;
+        }
+
+        .bg-grey {
+            background-color: #f6f6f6;
+        }
+
+        .logo-small {
+            color: rgb(51, 51, 51);
+            font-size: 50px;
+        }
+
+        .logo {
+            color: rgb(100,169,250);
+            font-size: 200px;
+        }
+
+        .thumbnail {
+            padding: 0 0 15px 0;
+            border: none;
+            border-radius: 0;
+        }
+
+            .thumbnail img {
+                width: 100%;
+                height: 100%;
+                margin-bottom: 10px;
+            }
+
+        .carousel-control.right, .carousel-control.left {
+            background-image: none;
+            color: rgb(100,169,250);
+        }
+
+        .carousel-indicators li {
+            border-color: rgb(207, 35, 45);
+        }
+
+            .carousel-indicators li.active {
+                background-color: rgb(189,220,232);
+            }
+
+        .item h4 {
+            font-size: 19px;
+            line-height: 1.375em;
+            font-weight: 400;
+            font-style: italic;
+            margin: 70px 0;
+        }
+
+        .item span {
+            font-style: normal;
+        }
+
+        a.list-group-item:hover {
+            background-color: rgb(227, 240, 245);
+            color: rgb(51, 51, 51);
+        }
+
+        .list-group-item.active:hover {
+            background-color: rgb(189, 220, 232);
+            color: rgb(51, 51, 51);
+        }
+
+        .list-group-item.active,
+        .list-group-item.active:focus {
+            background-color: rgb(189, 220, 232);
+            /*background-color: rgb(189, 220, 232);*/
+            border-color: rgb(51, 51, 51);
+            color: rgb(51, 51, 51);
+        }
+
+        .list-group-item-info {
+            background-color: rgb(207, 35, 45);
+            color: rgb(255, 255, 255);
+            font-weight: 800;
+        }
+
+        .classWithPad {
+            margin: 1px 1px 1px 1px;
+            padding: 1px 1px 1px 1px;
+        }
+
+        .half-row {
+            height: 50%;
+        }
+
+        .panel {
+            border: 1px solid rgb(207, 35, 45);
+            /*rgb(207,35,45); was voor STAP*/
+            border-radius: 0 !important;
+            transition: box-shadow 0.5s;
+        }
+
+            .panel:hover {
+                box-shadow: 5px 0px 40px rgba(0,0,0, .2);
+            }
+
+        .panel-footer .btn:hover {
+            border: 1px solid rgb(207, 35, 45);
+            background-color: #fff !important;
+            color: rgb(100,169,250);
+        }
+
+        .panel-heading {
+            color: #fff !important;
+            background-color: rgb(207, 35, 45) !important;
+            /*background-color: rgb(100,169,250) !important;*/
+            border-bottom: 1px solid transparent;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+        }
+
+        .panel-footer {
+            background-color: white !important;
+        }
+
+            .panel-footer h3 {
+                font-size: 32px;
+            }
+
+            .panel-footer h4 {
+                color: #aaa;
+                font-size: 14px;
+            }
+
+            .panel-footer .btn {
+                margin: 15px 0;
+                background-color: rgb(100,169,250);
+                color: #fff;
+            }
+
+        .navbar {
+            margin-bottom: 0;
+            background-color: #e2e1dd;
+            background-color: rgba(57, 0, 82, 1);
+            background-color: rgb(100,169,250);
+            z-index: 9999;
+            border: 0;
+            font-size: 12px !important;
+            line-height: 1.42857143 !important;
+            letter-spacing: 4px;
+            border-radius: 0;
+            font-family: Montserrat, sans-serif;
+        }
+
+            .navbar li a, .navbar .navbar-brand {
+                color: #fff !important;
+            }
+
+        .navbar-nav li a:hover, .navbar-nav li.active a {
+            color: rgb(100,169,250) !important;
+            background-color: #fff !important;
+        }
+
+        .navbar-default .navbar-toggle {
+            border-color: transparent;
+            color: #fff !important;
+        }
+
+            .navbar-default .navbar-toggle .icon-bar {
+                border-color: transparent;
+                background-color: #fff !important;
+            }
+
+            .navbar-default .navbar-toggle:focus,
+            .navbar-default .navbar-toggle:hover {
+                border-color: transparent;
+                background-color: rgb(57, 0, 82) !important;
+            }
+
+        /* navbar from https://bootsnipp.com/snippets/5lapE */
+        .navbar-fixed-left {
+            width: 155px;
+            position: fixed;
+            border-radius: 0;
+            height: 100%;
+        }
+
+            .navbar-fixed-left .navbar-nav > li {
+                float: none; /* Cancel default li float: left */
+                width: 139px;
+            }
+
+            .navbar-fixed-left + .container {
+                padding-left: 160px;
+            }
+            /* einde navbar links */
+            /* On using dropdown menu (To right shift popuped) */
+            .navbar-fixed-left .navbar-nav > li > .dropdown-menu {
+                margin-top: -50px;
+                margin-left: 140px;
+                background-color: rgb(207, 35, 45);
+                ;
+            }
+
+        .text-left > p {
+            text-align: left;
+        }
+
+        navbar-fixed-top .navbar-nav > li > .dropdown-menu {
+            margin-top: -50px;
+            margin-left: 140px;
+            background-color: rgb(207, 35, 45);
+            ;
+        }
+
+        footer .glyphicon {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: rgb(207, 35, 45);
+        }
+
+        .slideanim {
+            visibility: hidden;
+        }
+
+        .slide {
+            animation-name: slide;
+            -webkit-animation-name: slide;
+            animation-duration: 1s;
+            -webkit-animation-duration: 1s;
+            visibility: visible;
+        }
+
+        @keyframes slide {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateY(70%);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: translateY(0%);
+            }
+        }
+
+        @-webkit-keyframes slide {
+            0% {
+                opacity: 0;
+                -webkit-transform: translateY(70%);
+            }
+
+            100% {
+                opacity: 1;
+                -webkit-transform: translateY(0%);
+            }
+        }
+
+        @media screen and (max-width: 1199px) {
+            .jumbotron {
+                padding-top: 150px;
+            }
+        }
+
+        @media screen and (max-width: 991px) {
+            .jumbotron {
+                padding-top: 20px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .col-sm-4 {
+                text-align: center;
+                margin: 2px 0;
+            }
+
+            .btn-lg {
+                width: 100%;
+                margin-bottom: 35px;
+            }
+        }
+
+        @media screen and (max-width: 767px) {
+            .jumbotron {
+                padding-top: 100px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .logo {
+                font-size: 150px;
+            }
+        }
+
+        @media screen and (max-width: 479px) {
+            .jumbotron {
+                padding-top: 150px;
+            }
+        }
+
+        .highlight-edit {
+            color: rgba(255, 0, 0, 0.75);
+        }
+
+            .highlight-edit:after {
+                content: "]";
+            }
+
+            .highlight-edit:before {
+                content: "[";
+            }
+
+        .vcenter {
+            display: inline-block;
+            vertical-align: middle;
+            float: none;
+        }
+
+        thead tr {
+            background-color: rgb(227, 240, 245);
+        }
+
+            thead tr th {
+                color: rgb(51, 51, 51);
+                text-align: center;
+            }
+
+        tr td:first-child {
+            font-weight: 800;
+            text-align: left;
+            color: rgb(51, 51, 51);
+        }
+
+        tr td {
+            color: rgb(51, 51, 51);
+        }
+    </style>
+</head>
+<body id="Triple A webdemo'" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+    <script>
+        console.log($(window).width());
+
+        var printNum = function (num, dec) {
+            return (dec != undefined) ? num.toFixed(dec).replace(/\B(?=(\d{3})+(?!\d))/g, ",") : num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        };
+
+        var colorPalette = function (i) {
+            var colors = [
+            "rgb(169, 172, 178)",
+            "rgb(88, 149, 243)",
+            "rgb(106, 163, 241)",
+            "rgb(101, 186, 235)",
+            "rgb(184, 187, 194)"
+            ];
+            return colors[i % colors.length];
+        };
+    </script>
+
+    <nav class="navbar navbar-inverse navbar-fixed-left">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Actie<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Data toevoegen</a></li>
+                        <li><a href="#">Sub Menu2</a></li>
+                        <li><a href="#">Sub Menu3</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Sub Menu4</a></li>
+                        <li><a href="#">Sub Menu5</a></li>
+                    </ul>
+                </li>
+                <li><a href="#Verzuim">Verzuim</a></li>
+                <li><a href="#ZW">Ziektewet</a></li>
+                <li><a href="#WGA">WGA</a></li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#pensioenvergelijker">Oudlicht</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">Documentatie<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20Verzuim.html">Verzuim</a></li>
+                            <li><a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20ZW.html">ZW</a></li>
+                            <li><a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20WGA.html">WGA</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Sign Out</a></li>
+                    <!--<li><a href="#deelnemers">OVERGANGEN</a></li>-->
+                    <!--<li><a href="#kosten">UITKERINGEN</a></li>-->
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="main" class="jumbotron text-center">
+
+        <!--<img src="img/stap.png" style="height: 200px; margin-bottom: 20px">-->
+        <p>Werkgeversdashboard voor <i>WERKGEVER</i></p>
+    </div>
+
+    <script>
+        //$(function () {
+
+        //    $.getJSON("data/aanbieders/aanbiedersM.json", function (data) {
+        //        pensioenRegelingen.data = data;
+
+        //        var htmlStr = { "DB": "", "DC": "" };
+
+        //        Object.keys(htmlStr).forEach(function (typeReg) {
+        //            htmlStr[typeReg] += "<thead><tr><th></th>";
+        //            for (key in data) {
+        //                htmlStr[typeReg] += "<th style='height: 30px'><div data-toggle='tooltip' data-placement='center' title='" + key + "'> " + data[key].short2 + "</div></th>";
+        //            }
+        //            htmlStr[typeReg] += "</tr></thead><tbody>";
+        //            for (kkey in pensioenRegelingen.filter[typeReg]) {
+        //                htmlStr[typeReg] += "<tr><td>" + kkey + "</td>";
+        //                for (key in data) {
+        //                    htmlStr[typeReg] += "<td>";
+        //                    if (typeof data[key]["regeling"][typeReg][kkey] == typeof true) {
+        //                        htmlStr[typeReg] += "<span class='glyphicon " + (data[key]["regeling"][typeReg][kkey] ? "glyphicon-ok" : "glyphicon-remove") + "'></span>";
+        //                    } else if (typeof data[key]["regeling"][typeReg][kkey] == typeof [1, 2]) {
+        //                        htmlStr[typeReg] += "[";
+        //                        for (var i = 0; i < data[key]["regeling"][typeReg][kkey].length; i++) {
+        //                            htmlStr[typeReg] += data[key]["regeling"][typeReg][kkey][i] + " - ";
+        //                        }
+        //                        htmlStr[typeReg] = htmlStr[typeReg].substr(0, htmlStr[typeReg].length - 3) + "]";
+        //                    } else {
+        //                        htmlStr[typeReg] += data[key]["regeling"][typeReg][kkey];
+        //                    }
+        //                    htmlStr[typeReg] += "</td>";
+        //                }
+        //                htmlStr[typeReg] += "</tr>";
+        //            }
+        //            htmlStr[typeReg] += "</tbody>";
+        //        });
+
+        //        $("#regeling-db").append(htmlStr.DB);
+        //        $("#regeling-db").find("[data-toggle='tooltip']").tooltip();
+
+        //        $("#regeling-dc").append(htmlStr.DC);
+        //        $("#regeling-dc").find("[data-toggle='tooltip']").tooltip();
+
+        //        htmlStr = "";
+        //        _(data).forEach(function (val, key) {
+        //            htmlStr += "<li><a href='#' onClick='return false;' data-key='" + val.short + "'>&nbsp;&nbsp;" + key + "</a></li>";
+        //        });
+        //        _([1, 2, 3]).forEach(function (val) {
+        //            $("#voorbeeld-" + val + "-aanbieder-list").html(htmlStr);
+        //        });
+
+        //    });
+        //});
+    </script>
+
+    <div class="row">
+
+        <div id="Totaal" class="container-fluid text-center">
+            <h2>Totaal <i>Werkgever</i></h2>
+            <div class="col-sm-1 vcenter"></div>
+            <div class="col-sm-2 vcenter">
+                <div class="panel-heading">Totalen</div>
+                <table class="table" align="right">
+                    <tr>
+                        <th>Totaal</th>
+                        <th>€ 220.000</th>
+                    </tr>
+                    <tr>
+                        <td>Verzuim</td>
+                        <td>€60.000</td>
+                    </tr>
+                    <tr>
+                        <td>Ziektewet</td>
+                        <td>€75.000</td>
+                    </tr>
+                    <tr>
+                        <td>WGA</td>
+                        <td>€85.000</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-sm-5 vcenter">
+                <div id="Totalen_werkgever_pie"><!-- Plotly chart will be drawn inside this DIV --></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+                var data = [{
+                    values: [85000, 75000, 60000],
+                    labels: ['Verzuim', 'Ziektewet', 'WGA'],
+                    type: 'pie',
+                }];
+
+                var layout = {
+                    height: 400,
+                    width: 500,
+                    marker: {
+                        color: ['rgb(200,0,0)', 'rgb(0,100,0)', 'rgb(0,0,100)']
+                    }
+                };
+                Plotly.newPlot('Totalen_werkgever_pie', data, layout);
+    </script>
+
+    <div id="Verzuim" class="container-fluid text-center">
+
+        <br />
+        <h2>Verzuim </h2>
+        <a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20Verzuim.html"><i>(Toelichting)</i></a>
+        <br />
+    </div>
+
+    <div id="ZW" class="container-fluid text-center">
+
+        <br />
+        <h2>Ziektewet</h2>
+        <a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20ZW.html"><i>(Toelichting)</i></a>
+        <br />
+    </div>
+
+    <!--- dit was het eerste-->
+    <!--<ol class="carousel-indicators"></ol>
+    <div class="carousel-inner" role="listbox"></div><br><br>-->
+
+    <div class='row'>
+        <div id="ZW" class="container-fluid text-center">
+            <div class="col-sm-1 vcenter"></div>
+            <div class="col-sm-2 vcenter">
+
+                <!-- Default panel contents -->
+                <div class="panel-heading">ZW-instroom in aantallen</div>
+
+                <table class="table">
+                    <tr>
+                        <th>Jaar</th>
+                        <th>Aantal</th>
+                    </tr>
+                    <tr>
+                        <td>2012</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2013</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2014</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2015</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2016</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2017</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>2018</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>2019</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>2020</td>
+                        <td>0.8</td>
+                    </tr>
+                    <tr>
+                        <td>2021</td>
+                        <td>0.8</td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="col-sm-3 vcenter">
+                <div class="panel-heading">ZW Schade</div>
+                <div id="lineZWSchade"></div>
+            </div>
+            <div class="col-sm-3 vcenter">
+                <div class="panel-heading">ZW Premie</div>
+                <div id="lineZWPremie"></div>
+            </div>
+            <div class="col-sm-2 vcenter">
+                <div class="panel-heading">Premie 2017-2019 ZW</div>
+                <div id="BarZW"></div>
+            </div>
+        </div>
+    </div>
+
+    <p align="center">
+        In dit scenario is gerekend met een instroom gelijk aan de sector (0,83).
+    </p>
+
+    <div id="WGA" class="container-fluid text-center">
+
+        <br />
+        <br />
+        <h2>WGA</h2>
+        <a href="file:///U:/Insurance/R&D/WIA%20tooling/7.%20WIA%20tool%20-%20Dashboards/1.%20Ontwikkeling/Demo's/Documentatie%20WGA.html"><i>(Toelichting)</i></a>
+    </div>
+
+    <!--- dit was het eerste-->
+    <!--<ol class="carousel-indicators"></ol>
+    <div class="carousel-inner" role="listbox"></div><br><br>-->
+
+    <div class='row'>
+        <div id="WGA" class="container-fluid text-center">
+            <div class="col-sm-1 vcenter"></div>
+            <div class="col-sm-2 vcenter">
+
+                <!-- Default panel contents -->
+                <div class="panel-heading">WGA-instroom in aantallen</div>
+
+                <table class="table" style='font-size:60%;'>
+                    <tr>
+                        <td>2012</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2013</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2014</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2015</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2016</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2017</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2018</td>
+                        <td>2</td>
+                    </tr>
+                    <tr>
+                        <td>2019</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2020</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2021</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2022</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2023</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2024</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2025</td>
+                        <td>0</td>
+                    </tr>
+                </table>
+
+            </div>
+            <div class="col-sm-3 vcenter">
+                <div class="panel-heading">WGA Schade</div>
+                <div id="lineWGASchade"></div>
+            </div>
+            <div class="col-sm-3 vcenter">
+
+                <div class="panel-heading">WGA Premie</div>
+                <div id="lineWGAPremie"></div>
+            </div>
+            <div class="col-sm-2 vcenter">
+                <div class="panel-heading">Premie 2017-2019 WGA</div>
+                <div id="BarWGA"></div>
+            </div>
+        </div>
+    </div>
+
+    <p align="center">
+        In dit scenario is gerekend met 2 WGA-instromers in 2018 en vervolgens een instromer in 2021, 2024 en 2027. <br>
+        Met dit scenario willen wij laten zien als zowel de huidig langdurig zieke als de persoon in de Ziektewet na 2 jaar in de WGA terecht komt.
+    </p>
+
+
+    <script>
+            var lijnWGASchade1 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+                type: 'scatter',
+                name: 'Historische uitkeringslast'
+            };
+            var lijnWGASchade2 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [0, 0, 0, 0, 0, 0, 30000, 20000, 35000, 25000, 50000, 45000, 65000, 70000],
+                type: 'scatter',
+                name: 'Toekomstige uitkeringslast'
+            };
+            lineWGASchade= document.getElementById('lineWGASchade');
+            Plotly.plot(lineWGASchade, [lijnWGASchade1, lijnWGASchade2], layout = { showlegend:true, legend:{"orientation": "h", y: 1.1, x: 0.0}, margin: { l: 50, r: 10, t: 1, b:20} });
+
+            var lijnWGAPremie1 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000],
+                type: 'scatter',
+                name: 'UWV',
+                line: { color: 'rgb(200,0,0)'}
+            };
+            var lijnWGAPremie2 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [0, 0, 0, 0, 0, 0, 30000, 20000, 35000, 25000, 50000, 45000, 65000, 70000],
+                type: 'scatter',
+                name: 'ERD',
+                line: { color: 'rgb(0,100,0)'}
+            };
+            var lijnWGAPremie3 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025],
+                y: [20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000, 20000],
+                type: 'scatter',
+                name: 'Aegon',
+                line: { color: 'rgb(0,0,100)'}
+            };
+            lineWGAPremie = document.getElementById('lineWGAPremie');
+            Plotly.plot(lineWGAPremie, [lijnWGAPremie1, lijnWGAPremie2, lijnWGAPremie3], layout = { showlegend:true, legend:{orientation: 'h', y: 1.1, x: 0.0}, margin: { l: 50, r: 10, t: 1, b:20} });
+
+            BarWGA1 = document.getElementById('BarWGA1');
+
+            Plotly.plot(BarWGA, [{
+                x: ['UWV', 'ERD', 'Aegon'],
+                y: [30000, 85000, 60000],
+                type: 'bar',
+                marker:{
+                color: ['rgb(200,0,0)', 'rgb(0,100,0)', 'rgb(0,0,100)']
+                }
+            }], {
+                margin: { l: 50, r: 10, t: 10, b:40}
+            });
+
+    </script>
+
+    <script>
+            lineZWSchade = document.getElementById('lineZWSchade');
+            var lijnZWSchade1 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018],
+                y: [0, 0, 0, 17485, 20951, 3324, 0],
+                type: 'scatter',
+                name: 'Historische schadelast ZW'},
+                showlegend = true;
+            var lijnZWSchade2 = {
+                x: [2012, 2013, 2014, 2015, 2016, 2017, 2018],
+                y: [0, 0, 0, 17485, 38436, 41760, 24275],
+                type: 'scatter',
+                name: 'Toekomstige schadelast ZW'},
+                showlegend = true;
+            Plotly.plot(lineZWSchade, [lijnZWSchade1, lijnZWSchade2], layout = { showlegend:true, legend:{"orientation": "h", y: 1.1, x: 0.0}, margin: { l: 50, r: 10, t: 1, b:20} });
+            var lijnZWPremie1= {
+                x: [2017, 2018, 2019, 2020, 2021],
+                y: [5000, 35000, 56000,30000,6000],
+                type: 'scatter',
+                name: 'Gedifferentieerde premie UWV',
+                line: { color: 'rgb(200,0,0)'}
+            };
+            var lijnZWPremie2 = {
+                x: [2017, 2018, 2019, 2020, 2021],
+                y: [25000, 25000, 25000, 25000, 25000],
+                type: 'scatter',
+                name: 'ERD + externe uitvoering',
+                line: { color: 'rgb(0,100,0)'}
+            };
+            var lijnZWPremie3 = {
+                x: [2017, 2018, 2019, 2020, 2021],
+                y: [10000, 10000, 10000, 10000, 10000],
+                type: 'scatter',
+                name: 'Aegon',
+                line: { color: 'rgb(0,0,100)'}
+            };
+            lineZWPremie= document.getElementById('lineZWPremie');
+            Plotly.plot(lineZWPremie, [lijnZWPremie1, lijnZWPremie2, lijnZWPremie3], layout = { showlegend:true, legend:{"orientation": "h", y: 1.1, x: 0.0}, margin: { l: 50, r: 10, t: 1, b:20} });
+
+            BarZW1 = document.getElementById('BarZW');
+
+            Plotly.plot(BarZW, [{
+                x: ['UWV', 'ERD', 'Aegon'],
+                y: [96000,75000,30000],
+                type: 'bar',
+                marker:{
+                color: ['rgb(200,0,0)', 'rgb(0,100,0)', 'rgb(0,0,100)']
+                }
+            }], {
+                margin: { l: 50, r: 10, t: 20, b:30}
+            });
+    </script>
+
+
+
+    <footer class="container-fluid text-center">
+        <a href="#main" title="Naar Begin">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </a>
+        <p>Werkgeversdashboard door <a href="http://www.aaa-riskfinance.nl" title="Out of the box risk-consultants">www.aaa-riskfinance.nl</a></p>
+    </footer>
+
+    <script>
+            $(function () {
+                // Add smooth scrolling to all links in navbar + footer link
+                $(".navbar a, footer a[href='#myPage']").on('click', function (event) {
+
+                    // Prevent default anchor click behavior
+                    event.preventDefault();
+
+                    // Store hash
+                    var hash = this.hash;
+
+                    // Using jQuery's animate() method to add smooth page scroll
+                    // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+                    $('html, body').animate({
+                        scrollTop: $(hash).offset().top
+                    }, 900, function () {
+
+                        // Add hash (#) to URL when done scrolling (default click behavior)
+                        window.location.hash = hash;
+                    });
+                });
+
+                $(window).scroll(function () {
+                    $(".slideanim").each(function () {
+                        var pos = $(this).offset().top;
+
+                        var winTop = $(window).scrollTop();
+                        if (pos < winTop + 600) {
+                            $(this).addClass("slide");
+                        }
+                    });
+                });
+            });
+    </script>
 </body>
 </html>
